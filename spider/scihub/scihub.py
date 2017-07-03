@@ -18,6 +18,7 @@ from bs4 import BeautifulSoup
 
 # for now, suppress warnings due to unverified HTTPS request; this will be fixed
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 # constants
@@ -25,11 +26,13 @@ SCIHUB_BASE_URL = 'http://sci-hub.cc/'
 SCHOLARS_BASE_URL = 'https://scholar.google.com/scholar'
 HEADERS = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0'}
 
+
 class SciHub(object):
     """
     SciHub class can search for papers on Google Scholars
     and fetch/download papers from sci-hub.io
     """
+
     def __init__(self):
         pass
 
@@ -113,7 +116,7 @@ class SciHub(object):
             if res.headers['Content-Type'] != 'application/pdf':
                 return {
                     'err': 'Failed to fetch pdf with identifier %s (resolved url %s) due to captcha'
-                       % (identifier, url)
+                           % (identifier, url)
                 }
             else:
                 return {
@@ -126,7 +129,7 @@ class SciHub(object):
 
             return {
                 'err': 'Failed to fetch pdf with identifier %s (resolved url %s) due to request exception.'
-                   % (identifier, url)
+                       % (identifier, url)
             }
 
     def _get_direct_url(self, identifier):
@@ -137,7 +140,7 @@ class SciHub(object):
         print(id_type)
 
         return identifier if id_type == 'url-direct' \
-                else self._search_direct_url(identifier)
+            else self._search_direct_url(identifier)
 
     def _search_direct_url(self, identifier):
         """
@@ -151,7 +154,7 @@ class SciHub(object):
         # print(iframe)
         if iframe:
             return iframe.get('src') if not iframe.get('src').startswith('//') \
-               else 'http:' + iframe.get('src')
+                else 'http:' + iframe.get('src')
 
     def _classify(self, identifier):
         """
@@ -194,6 +197,7 @@ class SciHub(object):
         pdf_hash = hashlib.md5(res.content).hexdigest()
         return '%s-%s' % (pdf_hash, name[-20:])
 
+
 def main():
     sh = SciHub()
 
@@ -202,11 +206,15 @@ def main():
     logger.setLevel(logging.DEBUG)
 
     parser = argparse.ArgumentParser(description='SciHub - To remove all barriers in the way of science.')
-    parser.add_argument('-d', '--download', metavar='(DOI|PMID|URL)', help='tries to find and download the paper', type=str)
-    parser.add_argument('-f', '--file', metavar='path', help='pass file with list of identifiers and download each', type=str)
+    parser.add_argument('-d', '--download', metavar='(DOI|PMID|URL)', help='tries to find and download the paper',
+                        type=str)
+    parser.add_argument('-f', '--file', metavar='path', help='pass file with list of identifiers and download each',
+                        type=str)
     parser.add_argument('-s', '--search', metavar='query', help='search Google Scholars', type=str)
-    parser.add_argument('-sd', '--search_download', metavar='query', help='search Google Scholars and download if possible', type=str)
-    parser.add_argument('-l', '--limit', metavar='N', help='the number of search results to limit to', default=10, type=int)
+    parser.add_argument('-sd', '--search_download', metavar='query',
+                        help='search Google Scholars and download if possible', type=str)
+    parser.add_argument('-l', '--limit', metavar='N', help='the number of search results to limit to', default=10,
+                        type=int)
     parser.add_argument('-o', '--output', metavar='path', help='directory to store papers', default='', type=str)
     parser.add_argument('-v', '--verbose', help='increase output verbosity', action='store_true')
 
@@ -249,6 +257,7 @@ def main():
                     logger.debug('%s', result['err'])
                 else:
                     logger.debug('Successfully downloaded file with identifier %s', identifier)
+
 
 if __name__ == '__main__':
     main()
