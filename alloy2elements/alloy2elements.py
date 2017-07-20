@@ -21,6 +21,21 @@ class alloy2elements(object):
     def readcsv(self):
         print("read csv")
 
+    def str_to_element_and_percentage(self, str_element):
+        dict_element = dict()
+        pattern_word = re.compile(r'([A-Z][a-z]?)')
+        pattern_float = re.compile(r'((?:[1-9]\d*|0)+(?:\.\d+)?)')
+        matchWord = pattern_word.search(str_element)
+        match1 = pattern_float.search(str_element)
+        if (matchWord):
+            element_name=(matchWord.group())
+        if (match1):
+            element_data=float(match1.group())
+        else:
+            element_data=1
+        dict_element[element_name]=element_data
+        return dict_element
+
     def stringConv(self):
         print("string Convertion")
         # Step 1: Load trajectories
@@ -42,8 +57,7 @@ class alloy2elements(object):
             alloyContent = each_alloy[0]
             Gbas = each_alloy[7]
 
-            print(alloyContent)
-            print("Gbas=%f" % float(Gbas))
+
 
             pattern2=re.compile(r'\(')
 
@@ -52,7 +66,23 @@ class alloy2elements(object):
             pattern_float=re.compile(r'((?:[1-9]\d*|0)+(?:\.\d+)?)')
             match2 = pattern2.search(alloyContent)
             if (match2):
-                print("pattern2 result = %s" % match2.group())
+                # print(match2.groups())
+                print(alloyContent)
+                match_inner_alloy = re.findall(r'(\([A-Za-z.0-9/]*\)(?:[1-9]\d*|0)+(?:\.\d+)?)', alloyContent)
+                if (match_inner_alloy):
+                    print('match3')
+                    # match4=re.match(r'',match4.group())
+                    # if (match4):
+                    #     print(match4.groups())
+                    print(match_inner_alloy)
+                    for inner in match_inner_alloy:
+                        elements_inner=re.findall(r'([A-Z][a-z]?(?:[1-9]\d*|0)*(?:\.\d+)?)',inner)
+                        print(elements_inner)
+                        if (elements_inner):
+                            for each_element_inner in elements_inner:
+                                print(self.str_to_element_and_percentage(each_element_inner))
+                else:
+                    print('no match3')
             else:
                 for m in p1.finditer(alloyContent):
                     each_element=m.group()
@@ -62,10 +92,13 @@ class alloy2elements(object):
                     if (matchWord):
                         elements.append(matchWord.group())
                     if(match1):
-                            data.append(float(match1.group()))
+                        data.append(float(match1.group()))
                 dict_elements = dict(zip(elements, data))
+
+                print(alloyContent)
+                print("Gbas=%f" % float(Gbas))
                 print(dict_elements)
-            print("---end----")
+            print("-----------------------------------------")
             # route_id = intersection_id + '-' + tollgate_id
             # if route_id not in travel_times.keys():
             #     travel_times[route_id] = {}
