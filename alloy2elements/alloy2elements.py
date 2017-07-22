@@ -6,9 +6,8 @@ import pandas as pd
 
 extension = ".csv"
 path = ""
-in_file_name ="MGS_G"
-in_file_name+= extension
-out_file_name = "out_"+ in_file_name+ extension
+in_file_name ="MGS_G"+extension
+out_file_name = "out_"+ in_file_name
 critical_col=7
 class alloy2elements(object):
 
