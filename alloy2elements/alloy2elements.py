@@ -6,9 +6,9 @@ import pandas as pd
 
 extension = ".csv"
 path = ""
-in_file_name ="MGS_G"+extension
+in_file_name = "MGs" + extension
 out_file_name = "out_"+ in_file_name
-critical_col=7
+critical_col = 6
 class alloy2elements(object):
 
     def __init__(self):
@@ -107,7 +107,7 @@ class alloy2elements(object):
                         # print(dict_elements)
                         all_inner_elements.update(dict_elements)
                         # print(all_inner_elements)
-                        all_inner_elements.update({'Gbas': float(Gbas)})
+                        all_inner_elements.update({'G': (Gbas)})
                         all_inner_elements.update({'raw':alloyContent})
                 else:
                     print('no match3')
@@ -130,7 +130,7 @@ class alloy2elements(object):
                 # print(alloyContent)
                 # print("Gbas=%f" % float(Gbas))
                 # print(dict_elements)
-                dict_elements.update({'Gbas': float(Gbas)})
+                dict_elements.update({'G': (Gbas)})
                 dict_elements.update({'raw': alloyContent})
                 dataList.append(dict_elements)
             counter+=1
@@ -157,10 +157,10 @@ def main():
     work1 = alloy2elements()
 
     dataList = work1.stringConv(path+in_file_name)
-    # print(len(dataList))
+    print(len(dataList))
     dataFrame = work1.toElements(dataList)
     dataFrame.fillna(0.0, inplace=True)
-    # print(dataFrame)
+    print(dataFrame)
     work1.writeCSV(dataFrame,out_file_name)
 
 if __name__ == '__main__':
